@@ -5,7 +5,7 @@ rm -rf build lib
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j 32
+make -j 4
 
 cd ../../g2o
 
@@ -14,7 +14,7 @@ rm -rf build lib
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j 32
+make -j 4
 
 echo "Uncompress vocabulary ..."
 
@@ -27,7 +27,7 @@ rm -rf build
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j 32
+make -j 4
 
 echo "Building ROS nodes"
 
@@ -44,4 +44,4 @@ cd build
 
 export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:$currentDir
 cmake ..
-make -j 32
+make -j 4

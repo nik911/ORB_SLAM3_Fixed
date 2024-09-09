@@ -1,3 +1,33 @@
+# Установка необхидимых библиотек
+```
+sudo apt-get update
+sudo apt-get install -y libgoogle-glog-dev
+
+sudo apt install mesa-common-dev libglu1-mesa-dev
+sudo apt install libfl-dev
+$ sudo apt-get install libusb-1.0-0-dev
+
+$ git clone https://github.com/IntelRealSense/librealsense.git
+$ cd librealsense
+$ mkdir build && cd build
+$ cmake ../ -DFORCE_RSUSB_BACKEND=true -DBUILD_PYTHON_BINDINGS=true -DCMAKE_BUILD_TYPE=release -DBUILD_EXAMPLES=true -DBUILD_GRAPHICAL_EXAMPLES=true
+$ sudo make uninstall && make clean && make && sudo make install
+
+
+
+git clone  https://github.com/google/glog.git
+$ cd glog
+$ mkdir build && cd build
+cmake ..
+make -j 4
+sudo make install
+sudo ldconfig
+
+```
+
+
+
+
 # ORB-SLAM3
 The raw address:
 https://github.com/UZ-SLAMLab/ORB_SLAM3
@@ -5,8 +35,8 @@ https://github.com/UZ-SLAMLab/ORB_SLAM3
 Copy:
 git config --global core.protectNTFS false && git clone https://github.com/shanpenghui/ORB_SLAM3_Fixed
 
-Reference article 参考文章：
->EVO Evaluation of SLAM 4 --- ORB-SLAM3 编译和利用数据集运行
+Reference article referenceArticle：
+>EVO Evaluation of SLAM 4 --- ORB-SLAM3 compileAndRunWithTheDataset
 >https://blog.csdn.net/shanpenghui/article/details/109354918
 
 >EVO Evaluation of SLAM 5 --- ORB-SLAM3 精度和性能效果评估
@@ -85,26 +115,26 @@ make -j 32
 sudo make install
 ```
 
-ippicv_2020_lnx_intel64_20191018_general.tgz 下载地址：
-链接: https://pan.baidu.com/s/1XwhaDnTaCxAIpmZCRijYvg
-提取码: rq4r
+ippicv_2020_lnx_intel64_20191018_general.tgz downloadAddress：
+link: https://pan.baidu.com/s/1XwhaDnTaCxAIpmZCRijYvg
+extractionCode: rq4r
 
 ## 2、Build ORB-SLAM3:
-Work in shells path, continue the operation upon:
+Работайте по пути оболочек, продолжайте операцию:
 ```shell script
 cd shells
 ./build.sh
 ```
 
 ## 3、Run ORB-SLAM3 in shell
-Before running, you should change the path in tum_vi.sh where you save the dataset, such as:
+Перед запуском вам следует изменить путь в tum_vi.sh, где вы сохраняете набор данных, например:
 ```shell script
-pathDatasetTUM_VI='/home/sph/Downloads' #Example, it is necesary to change it by the dataset path
+pathDatasetTUM_VI='/home/sph/Downloads'# Пример, необходимо изменить его по пути к набору данных
 ```
 
-**Remember to unzip the ORBvoc.txt.tar.gz into Vocabulary folder!!!**
+**Не забудьте разархивировать ORBvoc.txt.tar.gz в папку Vocabulary!!!**
 
-Work in shells path
+Работа в пути оболочек
 ```shell script
 cd shells
 ./tum_vi.sh
@@ -131,24 +161,25 @@ rosrun ORB_SLAM3 Mono Vocabulary/ORBvoc.txt Examples/Monocular-Inertial/TUM_512.
 
 ### 1. Update setting with your own PC.
 
-目前只有单目带IMU的被激活,里面的配置需要对应自己的电脑更新
+В настоящее время активирован только монокуляр с IMU, и внутреннюю конфигурацию необходимо обновить в соответствии с вашим собственным компьютером.
 
 ### 2. Old version bug might be fixed.
 
-原版出现的错误(因为本工程是在ORB3刚开放的时候就建立了，所以有些问题应该被作者修复了，如果有遗漏或冗余请读者自行忽略)
+Ошибки в исходной версии (поскольку этот проект был создан при первом открытии ORB3, некоторые проблемы должны были быть исправлены автором. 
+Если есть какие-либо упущения или дублирования, пожалуйста, игнорируйте их)
 
-原版ros的编译会出现ORBSLAM2的错误
+Компиляция оригинального ros приведет к ошибкам ORBSLAM2.
 ```C++
 error: ‘ORB_SLAM2’ has not been declared
      ImageGrabber(ORB_SLAM2::System* pSLAM):mpSLAM(pSLAM){}
 ```
 
-需要用指令修复：
+needToFixWithCommand
 ```shell script
 sed -i "s/ORB_SLAM2/ORB_SLAM3/g" `grep -rl "ORB_SLAM2"`
 ```
 
-原版ros的编译也有可能出现找不到文件的错误:
+Компиляция оригинального ros также может вызывать ошибки «файл не найден»:
 ```C++
 fatal error: GeometricCamera.h: No such file or directory #include "GeometricCamera.h"
 ```
@@ -157,37 +188,37 @@ fatal error: GeometricCamera.h: No such file or directory #include "GeometricCam
 ${PROJECT_SOURCE_DIR}/../../../include/CameraModels
 ```
 
-## 6、Use usb_cam to run camera_node
-But!!!! You can`t run ORB-SLAM3 without run the camera_node!!!!
-So, if you want to test ros-version, just use your computer camera(wish you have)
+## 6. Используйте usb_cam для запуска camera_node.
+Но!!!! Вы не можете запустить ORB-SLAM3 без запуска camera_node!!!!
+Итак, если вы хотите протестировать ros-версию, просто используйте камеру вашего компьютера (если бы она у вас была)
 
 ```shell script
 git clone https://github.com/bosch-ros-pkg/usb_cam.git
 ```
-Build and launch it, so you can see the /usb_cam/image_raw in rostopic.
-But, that is not enough!!!!!
-You should change the rostopic name in ORB-SLAM3, which is in Line 62, ros_mono.cc
+Соберите и запустите его, чтобы увидеть файл /usb_cam/image_raw в rostopic.
+Но этого мало!!!!!
+Вам следует изменить имя ростопика в ORB-SLAM3, которое находится в строке 62, ros_mono.cc.
 ```C++
 ros::Subscriber sub = nodeHandler.subscribe("/usb_cam/image_raw", 1, &ImageGrabber::GrabImage,&igb);
 ```
 
-After the steps up, it work finally!
+После шагов вверх, наконец, все заработало!
 
-#### Problem with using own camera
-When I first run it, error come out:
+#### Проблема с использованием собственной камеры
+Когда я впервые запускаю его, выходит ошибка:
 ```C++
 Failed to load module "canberra-gtk-module"
 ```
-To solve this problem, install the module:
+Чтобы решить эту проблему, установите модуль:
 ```shell script
 sudo apt-get install libcanberra-gtk-module
 ```
 
 ## 7、Run ORB-SLAM3 with Intel Realsense T265(ros1-noetic)
 
-Make sure docker is installed please !!!
+Убедитесь, что докер установлен, пожалуйста!!!
 
-### 7.1 Pull docker images
+### 7.1 Получение образов докера
 
 ```shell script
 docker pull registry.cn-hangzhou.aliyuncs.com/slam_docker/slam_docker:gpu
@@ -200,11 +231,11 @@ cd ORB_SLAM3_Fixed/shells
 sudo ./run_docker_gpu.sh <path_of_realsense_ros> <path_of_orbslam3_fixed> host
 ```
 
-The project realsense-ros link is [https://github.com/IntelRealSense/realsense-ros](https://github.com/IntelRealSense/realsense-ros)
+Ссылка на проект realsense-ros: [https://github.com/IntelRealSense/realsense-ros](https://github.com/IntelRealSense/realsense-ros).
 
-If you can not launch roscore, you can solve by add hostname which is needed by roscore into the file /etc/hosts.
+Если вы не можете запустить roscore, вы можете решить проблему, добавив имя хоста, необходимое для roscore, в файл /etc/hosts.
 
-If want to debug remote by clion, try in docker after run with run_docker_gpu.sh shells:
+Если вы хотите выполнить удаленную отладку с помощью clion, попробуйте в Docker после запуска с оболочками run_docker_gpu.sh:
 
 ```shell
 service ssh restart
@@ -241,13 +272,13 @@ Run the command below:
 rs-enumerate-devices -c
 ```
 
-Modify the file ORB-SLAM3-Fixed/Examples/Monocular-Inertial/TUM_512.yaml.
+Измените файл ORB-SLAM3-Fixed/Examples/Monocular-Inertial/TUM_512.yaml.
 
-The relation of .yaml file and realsense-sdk info is :
+Связь файла .yaml и информации realsense-sdk следующая:
 
-Intrinsic/Extrinsic from "Gyro" To "Fisheye 1" (realsense-sdk info)    =   Rotation matrix of Tbc  #Transformation from body-frame (imu) to camera (ORB-SLAM3-Fixed/Examples/Monocular-Inertial/TUM_512.yaml)
+Внутренний/внешний от «Гиро» до «Рыбий глаз 1» (информация Realsense-SDK) = Матрица вращения Tbc #Transformation из кадра тела (imu) в камеру (ORB-SLAM3-Fixed/Examples/Monocular-Inertial/TUM_512.yaml )
 
-Intrinsic Params:
+Внутренние параметры:
 
 ```shell
 PPX  -->  Camera.cx
@@ -291,11 +322,11 @@ Translation_Vector[2]  -->  Tbc.data[2][3]
 ![image](https://github.com/shanpenghui/ORB_SLAM3_Fixed/blob/master/pics/Tbc_data_Ext.png)
 
 
-### 7.4 Set IMU Intrinsic Parameters
+### 7.4 Установка внутренних параметров IMU
 
-#### 7.4.1 Launch T265 Camera to save imu calibration rosbag
+#### 7.4.1 Запустите камеру T265, чтобы сохранить rosbag калибровки imu
 
-1. terminal one
+1. терминал один
 
 ```shell
 mkdir -p imu_utils_ws/src && cd imu_utils_ws/src && git clone https://github.com/IntelRealSense/realsense-ros.git
@@ -353,10 +384,9 @@ roslaunch realsense2_camera rs_t265.launch fisheye_width:=848 fisheye_height:=80
 
 ### 7.5 Set imu topic
 
-To make this code suitable for dataset, so the topic change is not commited in code.
+Сделать этот код подходящим для набора данных, чтобы изменение темы не фиксировалось в коде.
 
-Before use own camera, you should change imu topic name from /imu to :
-
+Прежде чем использовать собственную камеру, вам следует изменить имя темы imo с /imu на:
 
 (in Line 98 of ORB_SLAM3_Fixed/Examples/ROS/ORB_SLAM3/src/ros_mono_inertial.cc)
 
@@ -367,9 +397,9 @@ Before use own camera, you should change imu topic name from /imu to :
 
 ### 7.6 Run ORB-SLAM3（Monocular-Inertial）
 
-Before do this step, change the file_path in mono_inertial.launch file to your own env.
+Прежде чем выполнить этот шаг, измените file_path в файле mono_inertial.launch на свой собственный env.
 
-This example is :
+Этот пример:
 
 ```shell
 args="/home/user/Downloads/ORB_SLAM3_Fixed/Vocabulary/ORBvoc.txt /home/user/Downloads/ORB_SLAM3_Fixed/Examples/Monocular-Inertial/TUM_512.yaml"

@@ -97,23 +97,23 @@ int main(int argc, char **argv)
 #ifdef COMPILEDWITHC11
         std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
 #else
-        std::chrono::monotonic_clock::time_point t1 = std::chrono::monotonic_clock::now();
+        std::chrono::time_point t1 = std::chrono::now();
 #endif
 
-        // Pass the image to the SLAM system
+        // Передаем изображение в систему SLAM
         SLAM.TrackRGBD(imRGB,imD,tframe);
 
 #ifdef COMPILEDWITHC11
         std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
 #else
-        std::chrono::monotonic_clock::time_point t2 = std::chrono::monotonic_clock::now();
+        std::chrono::time_point t2 = std::chrono::now();
 #endif
 
         double ttrack= std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t1).count();
 
         vTimesTrack[ni]=ttrack;
 
-        // Wait to load the next frame
+        // Ждем загрузки следующего кадра
         double T=0;
         if(ni<nImages-1)
             T = vTimestamps[ni+1]-tframe;
